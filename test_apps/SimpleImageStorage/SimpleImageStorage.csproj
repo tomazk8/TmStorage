@@ -114,12 +114,6 @@
     <Resource Include="Lib\Images\Replace.ico" />
     <Resource Include="Lib\Images\Open.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\trunk\Storage\TmStorage.csproj">
-      <Project>{7121554b-164c-454c-8cbe-374bca12ab08}</Project>
-      <Name>TmStorage</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

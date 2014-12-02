@@ -19,7 +19,7 @@ namespace TmFramework.Transactions
     /// <summary>
     /// Segment holds information about area that have already been backed up or doesn't require backup
     /// </summary>
-    public class Segment
+    internal class Segment
     {
         #region Public fields
         /// <summary>

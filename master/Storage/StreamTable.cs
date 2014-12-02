@@ -30,7 +30,6 @@ namespace TmFramework.TmStorage
         private StreamTableMap map = new StreamTableMap();
         // Stream holding stream table
         private StorageStream stream;
-        private BinaryReader reader;
         private BinaryWriter writer;
         private Dictionary<Guid, StorageStreamMetadata> entriesAddedInTransaction = new Dictionary<Guid, StorageStreamMetadata>();
         #endregion
@@ -43,7 +42,7 @@ namespace TmFramework.TmStorage
         public StreamTable(StorageStream stream)
         {
             this.stream = stream;
-            reader = new BinaryReader(stream);
+            
             writer = new BinaryWriter(stream);
             LoadStreamTable();
         }

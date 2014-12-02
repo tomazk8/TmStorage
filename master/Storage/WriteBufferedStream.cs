@@ -22,7 +22,7 @@ namespace TmFramework.TmStorage
     /// Purpose of this stream is to buffer writes during transaction. They are flushed to the underlying stream when
     /// transaction ends or when buffer size is exceeded.
     /// </summary>
-    public class WriteBufferedStream : Stream
+    internal class WriteBufferedStream : Stream
     {
         #region Fields
         private Stream stream;
@@ -62,7 +62,7 @@ namespace TmFramework.TmStorage
             get { return stream.CanWrite; }
         }
 
-        public long length = 0;
+        private long length = 0;
         public override long Length
         {
             get { return length; }
@@ -76,7 +76,7 @@ namespace TmFramework.TmStorage
         }
 
         private bool bufferingEnabled = true;
-        public bool BufferingEnabled
+        /*public bool BufferingEnabled
         {
             get { return bufferingEnabled; }
             set
@@ -86,7 +86,7 @@ namespace TmFramework.TmStorage
 
                 bufferingEnabled = value;
             }
-        }
+        }*/
         #endregion
 
         #region Public methods
@@ -349,7 +349,6 @@ namespace TmFramework.TmStorage
             {
                 get { return Position + Data.Length; }
             }
-            public bool IsModified { get; set; }
         }
         #endregion Classes
     }

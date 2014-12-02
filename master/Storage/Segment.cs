@@ -138,25 +138,7 @@ namespace TmFramework.TmStorage
 
             return segment;
         }
-        /// <summary>
-        /// Merges segments into one segment
-        /// </summary>
-        /// <param name="segment">Segment to merge with</param>
-        /// <returns>New merged segment</returns>
-        public Segment Merge(Segment segment)
-        {
-            Segment newSegment;
-
-            if (Location + Size == segment.Location)
-                newSegment = Segment.Create(Location, Size + segment.Size, null);
-            else if (segment.Location + segment.Size == Location)
-                newSegment = Segment.Create(segment.Location, Size + segment.Size, null);
-            else
-                throw new InvalidOperationException("Unable to merge because segments doesn't touch each other");
-
-            return newSegment;
-        }
-
+        
         /// <summary>
         /// Creates a segment
         /// </summary>

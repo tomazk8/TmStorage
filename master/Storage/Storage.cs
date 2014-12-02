@@ -26,10 +26,6 @@ namespace TmFramework.TmStorage
     public class Storage
     {
         #region Fields
-        // Reader and writer for master stream
-        private BinaryReader masterReader;
-        private BinaryWriter masterWriter;
-
         // System streams
         private StorageStream storageMetadataStream;
         private StorageStreamMetadata streamTableStreamMetadata;
@@ -109,10 +105,8 @@ namespace TmFramework.TmStorage
 
             this.transactionStream = transactionLogStream != null ? new TransactionStream(stream, transactionLogStream, blockSize) : null;
             this.MasterStream = new MasterStream(transactionStream != null ? transactionStream : stream, false);
-            this.masterReader = new BinaryReader(stream);
-            this.masterWriter = new BinaryWriter(stream);
 
-            OpenStorage(this.MasterStream);
+            OpenStorage();
         }
         /// <summary>
         /// Constructor
@@ -271,7 +265,7 @@ namespace TmFramework.TmStorage
         /// <summary>
         /// Gets areas where empty space segments are located
         /// </summary>
-        public List<SegmentExtent> GetFreeSpaceExtents()
+        public IEnumerable<SegmentExtent> GetFreeSpaceExtents()
         {
             CheckClosed();
             if (FreeSpaceStream != null)
@@ -541,8 +535,6 @@ namespace TmFramework.TmStorage
                 StreamTableIndex = -1
             }, this);
 
-            BinaryWriter streamTableStreamWriter = new BinaryWriter(streamTableStream);
-
             // Initialize empty space stream
             Segment emptyStreamSegment = Segment.Create(streamTableSegment.DataAreaEnd, long.MaxValue - streamTableSegment.DataAreaEnd, null);
             stream.Position = streamTableSegment.DataAreaEnd;
@@ -564,7 +556,7 @@ namespace TmFramework.TmStorage
         /// <summary>
         /// Opens the storage
         /// </summary>
-        private void OpenStorage(Stream masterStream)
+        private void OpenStorage()
         {
             StartTransaction();
             try

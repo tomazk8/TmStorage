@@ -175,7 +175,6 @@ namespace TmFramework.TmStorage
                 // If write position is placed after initialized size, stream must be initialized up to the write position
                 if (position > metadata.InitializedLength)
                 {
-                    long savedPosition = position;
                     int bytesToWrite = (int)(position - metadata.InitializedLength);
 
                     position = metadata.InitializedLength;
@@ -201,7 +200,7 @@ namespace TmFramework.TmStorage
         /// </summary>
         private int ReadWriteData(byte[] buffer, int offset, int count, bool doWrite)
         {
-            count = Math.Min(buffer.Length, count);
+            count = Math.Min(buffer.Length - offset, count);
             // Limit amount of read data to stream length
             if (!doWrite)
                 count = (int)Math.Min(count, metadata.Length - position);
@@ -210,7 +209,6 @@ namespace TmFramework.TmStorage
             int fillCount = count - realCount;
             long positionInSegment = position;
             bool canReadOrWrite = false;
-            int bufferOffset = 0;
 
             var node = segments.First;
             while (realCount > 0)
@@ -220,12 +218,12 @@ namespace TmFramework.TmStorage
                     storage.MasterStream.Position = node.Value.DataAreaStart + positionInSegment;
                     int bytesToReadOrWrite = Math.Min(realCount, (int)(node.Value.DataAreaEnd - (node.Value.DataAreaStart + positionInSegment)));
                     if (doWrite)
-                        storage.MasterStream.Write(buffer, bufferOffset, bytesToReadOrWrite);
+                        storage.MasterStream.Write(buffer, offset, bytesToReadOrWrite);
                     else
-                        storage.MasterStream.Read(buffer, bufferOffset, bytesToReadOrWrite);
+                        storage.MasterStream.Read(buffer, offset, bytesToReadOrWrite);
 
                     realCount -= bytesToReadOrWrite;
-                    bufferOffset += bytesToReadOrWrite;
+                    offset += bytesToReadOrWrite;
 
                     node = node.Next;
                     positionInSegment = 0;
@@ -251,7 +249,7 @@ namespace TmFramework.TmStorage
                 while (fillCount > 0)
                 {
                     int bytesToCopy = Math.Min(fillCount, Tools.EmptyBuffer.Length);
-                    Array.Copy(Tools.EmptyBuffer, 0, buffer, bufferOffset, bytesToCopy);
+                    Array.Copy(Tools.EmptyBuffer, 0, buffer, offset, bytesToCopy);
                     fillCount -= bytesToCopy;
                 }
             }
@@ -413,7 +411,7 @@ namespace TmFramework.TmStorage
         /// segment data area must be equal or less than the amount because more than the required amount would
         /// be removed.
         /// </summary>
-        private SplitData CalculateSplittedSegmentSize(Segment segmentToSplit, long amountToRemove, bool splitAtEnd, long blockSize)
+        private static SplitData CalculateSplittedSegmentSize(Segment segmentToSplit, long amountToRemove, bool splitAtEnd, long blockSize)
         {
             long newSegmentSize = splitAtEnd ? amountToRemove - Segment.StructureSize : amountToRemove + Segment.StructureSize;
             bool isRounded = newSegmentSize % blockSize == 0;
@@ -620,18 +618,7 @@ namespace TmFramework.TmStorage
     }
 
     internal enum StorageStreamChangeType { SegmentsAndMetadata, Closing }
-    internal class StorageStreamChangedArgs : EventArgs
-    {
-        public StorageStream Stream { get; private set; }
-        public StorageStreamChangeType ChangeType { get; private set; }
-
-        public StorageStreamChangedArgs(StorageStream stream, StorageStreamChangeType changeType)
-        {
-            this.Stream = stream;
-            this.ChangeType = changeType;
-        }
-    }
-
+    
     internal struct SplitData
     {
         public long SplittedSegmentSize;

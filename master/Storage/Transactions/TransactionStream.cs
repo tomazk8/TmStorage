@@ -22,7 +22,7 @@ namespace TmFramework.Transactions
     /// <summary>
     /// Stream that backs up overwritten data into transaction log stream.
     /// </summary>
-    public class TransactionStream : Stream
+    internal class TransactionStream : Stream
     {
         #region Fields
         // Size of the minimum block size that will be backed up
@@ -63,7 +63,7 @@ namespace TmFramework.Transactions
 
         #region Properties
         private Stream masterStream;
-        /// <summary>
+        /*/// <summary>
         /// Stream for which backup si performed
         /// </summary>
         public Stream MasterStream
@@ -76,7 +76,7 @@ namespace TmFramework.Transactions
         public Guid? CurrentTransactionId
         {
             get { return logStreamHeader != null ? logStreamHeader.TransactionId : (Guid?)null; }
-        }
+        }*/
         #endregion
 
         #region Private methods
@@ -205,7 +205,7 @@ namespace TmFramework.Transactions
             logStream.Flush();
         }
         // Copies data from source to destination stream.
-        private int CopyData(Stream src, int size, Stream dst)
+        private static int CopyData(Stream src, int size, Stream dst)
         {
             byte[] buf = new byte[32763];
             int bytesCopied = 0;

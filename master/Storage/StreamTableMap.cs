@@ -19,13 +19,13 @@ namespace TmFramework.TmStorage
     /// <summary>
     /// Provides an information which entries in stream table are used and which are not
     /// </summary>
-    public class StreamTableMap
+    internal class StreamTableMap
     {
         private List<int> entries = new List<int>();
         private LinkedList<int> freeEntries = new LinkedList<int>();
         private int count = 0;
 
-        public bool Get(int index)
+        /*public bool Get(int index)
         {
             // Just return that it's not set if index is above number of items - behave as infinite size list
             if (index > count - 1)
@@ -39,7 +39,7 @@ namespace TmFramework.TmStorage
             bool result = (value & mask) == mask;
 
             return result;
-        }
+        }*/
         public void Set(int index, bool newValue)
         {
             // Enlarge list

@@ -13,7 +13,6 @@
 //ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace TmFramework.TmStorage
@@ -84,21 +83,6 @@ namespace TmFramework.TmStorage
         public override long Length
         {
             get { return stream.Length; }
-        }
-
-        internal bool TransactionsEnabled
-        {
-            get { return transactionsEnabled; }
-            set
-            {
-                transactionsEnabled = value;
-
-                // Enable/disable buffering
-                WriteBufferedStream bufferedStream = stream as WriteBufferedStream;
-
-                if (bufferedStream != null)
-                    bufferedStream.BufferingEnabled = value;
-            }
         }
         #endregion
 
@@ -236,7 +220,7 @@ namespace TmFramework.TmStorage
     }
 
     #region ReadWriteEventArgs
-    public class ReadWriteEventArgs : EventArgs
+    internal class ReadWriteEventArgs : EventArgs
     {
         public byte[] Buf { get; private set; }
         public long Location { get; private set; }

@@ -52,7 +52,7 @@ namespace TmFramework.TmStorage
             return hash;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Saves stream to file
         /// </summary>
         /// <param name="stream"></param>
@@ -60,11 +60,13 @@ namespace TmFramework.TmStorage
         public static void Debug_SaveStream(Stream stream, string filename)
         {
             stream.Position = 0;
-            FileStream f = new FileStream(filename, FileMode.Create);
-            byte[] buf = new byte[stream.Length];
-            stream.Read(buf, 0, buf.Length);
-            f.Write(buf, 0, buf.Length);
-            f.Close();
+            using (FileStream f = new FileStream(filename, FileMode.Create))
+            {
+                byte[] buf = new byte[stream.Length];
+                stream.Read(buf, 0, buf.Length);
+                f.Write(buf, 0, buf.Length);
+                f.Close();
+            }
         }
 
         public static void Debug_ListSegments(StorageStream stream)
@@ -77,6 +79,6 @@ namespace TmFramework.TmStorage
                     System.Diagnostics.Debug.WriteLine(string.Empty);
                 }
             }
-        }
+        }*/
     }
 }
